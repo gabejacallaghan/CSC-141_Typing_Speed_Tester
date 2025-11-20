@@ -1,0 +1,1 @@
+paragraph = """A curious cat wandered along the fence, pausing to watch a fluttering leaf drift lazily to the ground. In the distance, the faint hum of traffic blended with the cheerful chirping of birds. Every detail seemed to whisper a reminder to slow down, breathe deeply, and appreciate the simple beauty hidden in ordinary moments."""
