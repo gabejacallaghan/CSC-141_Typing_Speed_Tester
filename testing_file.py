@@ -51,7 +51,6 @@ class Leaderboard_page(tk.Frame):
         super().__init__(parent)
         tk.Label(self, text="THIS IS THE LEADERBOARD PAGE").pack(pady=20)
 
-
 app = App()
 app.mainloop()
 
