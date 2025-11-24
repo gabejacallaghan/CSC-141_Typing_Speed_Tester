@@ -1,7 +1,9 @@
 import time
 import tkinter as tk
+import random
+from PIL import Image, ImageTk #imports pillow
 
-#CREATES A FULL APP
+# App and Page Switcher
 
 class App(tk.Tk): # Defines new class that inherits from tk.Tk
     def __init__(self):
@@ -24,9 +26,9 @@ class App(tk.Tk): # Defines new class that inherits from tk.Tk
         frame = self.frames[page] #looks up the frame from the self.frames dictionary
         frame.tkraise() #raises that frame to the top
 
-#CREATES SEPARATE PAGES
+# Pages
 
-class Menu_page(tk.Frame): # makes this a child class of tk.Frame
+class Menu_page(tk.Frame): # Initial page
     def __init__(self, parent, controller): #parent is the container frame where it will live, and controller is the App instance (used to switch pages)
         super().__init__(parent)
         tk.Label(self, text="THIS IS THE START MENU").pack(pady=20)
@@ -35,28 +37,33 @@ class Menu_page(tk.Frame): # makes this a child class of tk.Frame
         tk.Button(self, text="See Leaderboard",
                   command=lambda: controller.show_frame(Leaderboard_page)).pack()
 
-class Typing_page(tk.Frame): # Page on which the typing is completed
+class Typing_page(tk.Frame): # Contains paragraph and entry box
     def __init__(self, parent, controller):
         super().__init__(parent)
-        tk.Label(self, text="THIS IS THE TYPING PAGE").pack(pady=20)
-        tk.Button(self, text="THIS BUTTON FINISHES",
-                  command=lambda: controller.show_frame(Result_page)).pack()
-        #Paragraph
-        paragraph = """Macaroni and cheese is one of those classic comfort foods that almost everyone enjoys. The warm cheese sauce blends perfectly with the tender pasta, creating a simple but incredibly satisfying dish. Some people prefer the boxed version for its nostalgic flavor, while others take pride in making it from scratch with real cheese and baked breadcrumbs on top. No matter how it’s prepared, mac and cheese has a way of bringing people together, especially on cold days or during family gatherings. Its versatility also makes it fun to experiment with, whether by adding spices, vegetables, or even different types of cheese. It’s a dish that feels familiar, cozy, and endlessly customizable."""
-        tk.Label(self, text="Type the paragraph below:").pack(pady=20)
-        self.paragraph_label = tk.Label(self, text=paragraph, wraplength=500, justify="left") #displays paragraph
-        self.paragraph_label.pack(pady=20)
-        self.text_box = tk.Text(self, height=10, width=60) #box to type in
-        self.text_box.pack(pady=15)
+        tk.Label(self, text="THIS IS THE TYPING PAGE").pack()
         
-class Result_page(tk.Frame): # When the timer runs out, this page appears with the results
+        # Paragraphs
+        paragraph_1 = """Macaroni and cheese is one of those classic comfort foods that almost everyone enjoys. The warm cheese sauce blends perfectly with the tender pasta, creating a simple but incredibly satisfying dish. Some people prefer the boxed version for its nostalgic flavor, while others take pride in making it from scratch with real cheese and baked breadcrumbs on top. No matter how it’s prepared, mac and cheese has a way of bringing people together, especially on cold days or during family gatherings. Its versatility also makes it fun to experiment with, whether by adding spices, vegetables, or even different types of cheese. It’s a dish that feels familiar, cozy, and endlessly customizable."""
+        paragraph_2 = """On quiet autumn mornings, there’s a particular stillness that seems almost intentional, as if the world is pausing just long enough for anyone paying attention to notice the small details usually lost in the rush of everyday life. The light filters through thinning leaves at an angle that feels softer than summer sunlight, carrying a faint golden tint that settles gently on everything it touches. Even the sounds shift: birds call in slower, clearer rhythms, and distant traffic seems muffled, as though wrapped in a blanket of cool air. People walking through a park at this hour often move with a kind of unspoken agreement not to disturb the calm, taking slower steps, breathing a little deeper, and letting their thoughts drift without urgency. It’s in these moments that the mind seems to reorder itself naturally, drawing connections between memories, hopes, and half-formed ideas, creating a rare sense of clarity that lingers quietly throughout the rest of the day."""
+        paragraph_3 = """Sometimes I imagine what it would be like to spend a full day inside an old, quiet library—the kind with tall wooden shelves, a faint smell of paper and dust, and large windows that let in soft, filtered light even on cloudy afternoons. There’s something soothing about the way sound behaves in spaces like that, as if footsteps and whispers are automatically lowered out of respect for the thousands of stories resting on the shelves. You can wander past rows of books without any particular plan and still feel a sense of purpose, because every spine you pass represents a small doorway into someone else’s imagination or memory. Finding a seat at a heavy wooden table, you might open a random volume and discover a topic you’ve never thought about before, letting your curiosity lead you from one idea to the next. Hours can slip by almost unnoticed in such a place, leaving you with a pleasant sense of quiet accomplishment, even if all you did was read, think, and breathe in the calm."""
+        paragraph_4 = """Under the flicker of a dying streetlamp, I found myself staring at the kind of scene that makes a man question whether he’s dreaming or just losing his grip on the edges of reality. The rain had turned the cracked pavement behind the Walmart into a slick sheet of shadow and reflection, and through the mist lumbered three pink elephants—yes, pink, like bubblegum dipped in moonlight—moving with the heavy confidence of creatures who knew nobody would dare cross them. Their tusks glinted like ivory switchblades as they guarded the entrance to a rusted loading bay, where muffled grunts and the dull thud of fists against flesh leaked out between the metal slats. Word on the street was that they ran the roughest underground fight club in the county, the kind of joint where a man could lose his wallet, his dignity, or his last good tooth in under ten minutes if he wasn’t careful. As I watched them size me up with small, knowing eyes, I realized I had two choices: turn around and forget what I’d seen, or step inside and find out why even the bravest folks in town whispered about this place only after dark."""
+        random_paragraph = random.choice([paragraph_1, paragraph_2, paragraph_3, paragraph_4]) # chooses a random paragraph (using import random) from 1-4
+
+
+        tk.Label(self, text="Type the paragraph below:").pack(pady=20) 
+        self.paragraph_label = tk.Label(self, text=random_paragraph, wraplength=500, justify="left").pack(pady=20) # displays paragraph
+        self.text_box = tk.Text(self, height=10, width=60).pack(pady=15) # entry box
+        tk.Button(self, text="RESULTS (WILL BE TRIGGERED BY TIMER)",
+                  command=lambda: controller.show_frame(Result_page)).pack()
+        
+class Result_page(tk.Frame): # Contains results, appears at end of timer
     def __init__(self, parent, controller):
         super().__init__(parent)
         tk.Label(self, text="THIS IS THE RESULTS PAGE").pack(pady=20)
         tk.Button(self, text="See Leaderboard",
                   command=lambda: controller.show_frame(Leaderboard_page)).pack()
 
-class Leaderboard_page(tk.Frame): # Leaderboard page, displays your score at the top along with other saved scores beneath it.
+class Leaderboard_page(tk.Frame): # Contains saved scores
     def __init__(self, parent, controller):
         super().__init__(parent)
         tk.Label(self, text="THIS IS THE LEADERBOARD PAGE").pack(pady=20)
@@ -64,7 +71,6 @@ class Leaderboard_page(tk.Frame): # Leaderboard page, displays your score at the
                   command=lambda: controller.show_frame(Menu_page)).pack()
         tk.Button(self, text="Try Again",
                   command=lambda: controller.show_frame(Typing_page)).pack()
-
 
 app = App()
 app.mainloop()
