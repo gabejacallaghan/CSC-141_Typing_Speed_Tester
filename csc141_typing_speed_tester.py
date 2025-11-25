@@ -62,16 +62,16 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
     def check_text(self, event=None):
         typed_text = self.text_box.get("1.0", "end-1c")
         original_text = self.random_paragraph
-        self.text_box.tag_remove("wrong", "1.0", "end")
-        for i in range(len(typed_text)):
-            if i >= len(original_text):
+        self.text_box.tag_remove("wrong", "1.0", "end") 
+        for i in range(len(typed_text)): # loops through each character in typed_text
+            if i >= len(original_text): 
                 break
-            if typed_text[i] != original_text[i]:
-                start = f"1.0 + {i} chars"
-                end = f"1.0 + {i+1} chars"
-                self.text_box.tag_add("wrong", start, end)
+            if typed_text[i] != original_text[i]:# compares each character to original_text
+                start = f"1.0 + {i} chars" # calculates start position for tagging
+                end = f"1.0 + {i+1} chars" # ends tagging one character after start
+                self.text_box.tag_add("wrong", start, end) # adds "wrong" tag to incorrect characters
         
-        self.text_box.tag_config("wrong", background="red", foreground="white")
+        self.text_box.tag_config("wrong", background="red", foreground="white") # configures "wrong" tag to have red background
         
 class Result_page(tk.Frame): # Contains results, appears at end of timer
     def __init__(self, parent, controller):
