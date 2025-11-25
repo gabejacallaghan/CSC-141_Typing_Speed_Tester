@@ -74,12 +74,12 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         
         self.text_box.tag_config("wrong", background="red", foreground="white") # configures "wrong" tag to have red background
 
-    def calculate_wpm(self):
+    def calculate_wpm(self, elapsed_time):
         typed_text = self.text_box.get("1.0", "end-1c")
         words = typed_text.split()
         num_words = len(words)
 
-        time_minutes = self.elapsed_time / 60
+        time_minutes = elapsed_time / 60
         wpm = num_words / time_minutes if time_minutes > 0 else 0
         return round(wpm)
         
