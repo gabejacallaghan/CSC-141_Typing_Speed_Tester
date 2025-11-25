@@ -49,7 +49,6 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         random_paragraph = random.choice([paragraph_1, paragraph_2, paragraph_3, paragraph_4]) # chooses a random paragraph (using import random) from 1-4
         self.random_paragraph = random_paragraph
 
-
         tk.Label(self, text="Type the paragraph below:").pack(pady=20)
         self.paragraph_label = tk.Label(self, text=self.random_paragraph, wraplength=500, justify="left")
         self.paragraph_label.pack(pady=20) # displays paragraph
