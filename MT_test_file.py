@@ -74,8 +74,6 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         
         self.text_box.tag_config("wrong", background="red", foreground="white")
 
-
-
         
 class Result_page(tk.Frame): # Contains results, appears at end of timer
     def __init__(self, parent, controller):
