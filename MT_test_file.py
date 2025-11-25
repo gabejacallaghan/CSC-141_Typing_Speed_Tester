@@ -61,8 +61,8 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
                   command=lambda: controller.show_frame(Result_page)).pack()
         
     def check_text(self, event=None):
-        typed_text = self.text_box.get("1.0", "end-1c")
-        original_text = self.random_paragraph
+        typed_text = self.text_box.get("1.0", "end-1c") # what the user has typed
+        original_text = self.random_paragraph # the original paragraph
         self.text_box.tag_remove("wrong", "1.0", "end")
         for i in range(len(typed_text)):
             if i >= len(original_text):
