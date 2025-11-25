@@ -47,25 +47,29 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         paragraph_3 = """Sometimes I imagine what it would be like to spend a full day inside an old, quiet library—the kind with tall wooden shelves, a faint smell of paper and dust, and large windows that let in soft, filtered light even on cloudy afternoons. There’s something soothing about the way sound behaves in spaces like that, as if footsteps and whispers are automatically lowered out of respect for the thousands of stories resting on the shelves. You can wander past rows of books without any particular plan and still feel a sense of purpose, because every spine you pass represents a small doorway into someone else’s imagination or memory. Finding a seat at a heavy wooden table, you might open a random volume and discover a topic you’ve never thought about before, letting your curiosity lead you from one idea to the next. Hours can slip by almost unnoticed in such a place, leaving you with a pleasant sense of quiet accomplishment, even if all you did was read, think, and breathe in the calm."""
         paragraph_4 = """Under the flicker of a dying streetlamp, I found myself staring at the kind of scene that makes a man question whether he’s dreaming or just losing his grip on the edges of reality. The rain had turned the cracked pavement behind the Walmart into a slick sheet of shadow and reflection, and through the mist lumbered three pink elephants—yes, pink, like bubblegum dipped in moonlight—moving with the heavy confidence of creatures who knew nobody would dare cross them. Their tusks glinted like ivory switchblades as they guarded the entrance to a rusted loading bay, where muffled grunts and the dull thud of fists against flesh leaked out between the metal slats. Word on the street was that they ran the roughest underground fight club in the county, the kind of joint where a man could lose his wallet, his dignity, or his last good tooth in under ten minutes if he wasn’t careful. As I watched them size me up with small, knowing eyes, I realized I had two choices: turn around and forget what I’d seen, or step inside and find out why even the bravest folks in town whispered about this place only after dark."""
         random_paragraph = random.choice([paragraph_1, paragraph_2, paragraph_3, paragraph_4]) # chooses a random paragraph (using import random) from 1-4
+        self.random_paragraph = random_paragraph
 
 
         tk.Label(self, text="Type the paragraph below:").pack(pady=20)
-        self.paragraph_label = tk.Label(self, text=random_paragraph, wraplength=500, justify="left").pack(pady=20) # displays paragraph
-        self.text_box = tk.Text(self, height=10, width=60).pack(pady=15) # entry box
+        self.paragraph_label = tk.Label(self, text=self.random_paragraph, wraplength=500, justify="left")
+        self.paragraph_label.pack(pady=20) # displays paragraph
+        self.text_box = tk.Text(self, height=10, width=60)
+        self.text_box.pack(pady=15) # entry box
+        self.text_box.bind("<KeyRelease>", self.check_text) 
         tk.Button(self, text="RESULTS (WILL BE TRIGGERED BY TIMER)",
                   command=lambda: controller.show_frame(Result_page)).pack()
         
-        def check_text(self, event=None):
-            typed_text = self.text_box.get("1.0", "end-1c")
-            original_text = self.random_paragraph
-            self.text_box.tag_remove("wrong", "1.0", "end")
-            for i in range(len(typed_text)):
-                if i >= len(original_text):
-                    break
-                if typed_text[i] != original_text[i]:
-                    start = f"1.0 + {i} chars"
-                    end = f"1.0 + {i+1} chars"
-                    self.text_box.tag_add("wrong", start, end)
+    def check_text(self, event=None):
+        typed_text = self.text_box.get("1.0", "end-1c")
+        original_text = self.random_paragraph
+        self.text_box.tag_remove("wrong", "1.0", "end")
+        for i in range(len(typed_text)):
+            if i >= len(original_text):
+                break
+            if typed_text[i] != original_text[i]:
+                start = f"1.0 + {i} chars"
+                end = f"1.0 + {i+1} chars"
+                self.text_box.tag_add("wrong", start, end)
         
         self.text_box.tag_config("wrong", background="red", foreground="white")
         
