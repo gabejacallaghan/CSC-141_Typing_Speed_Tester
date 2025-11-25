@@ -49,6 +49,7 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         random_paragraph = random.choice([paragraph_1, paragraph_2, paragraph_3, paragraph_4]) # chooses a random paragraph (using import random) from 1-4
         self.random_paragraph = random_paragraph
 
+
         tk.Label(self, text="Type the paragraph below:").pack(pady=20)
         self.paragraph_label = tk.Label(self, text=self.random_paragraph, wraplength=500, justify="left")
         self.paragraph_label.pack(pady=20) # displays paragraph
@@ -58,7 +59,34 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         tk.Button(self, text="RESULTS (WILL BE TRIGGERED BY TIMER)",
                   command=lambda: controller.show_frame(Result_page)).pack()
         
-    def check_text(self, event=None):
+    # Timer
+    
+        self.timer_label = tk.Label(self, text="60", font=("Arial", 40))
+        self.timer_label.pack(pady=20)
+        self.time_left_ms = 60000
+        self.timer_started = False
+
+        self.text_box.bind("<KeyPress>", self.start_timer)
+        self.text_box.bind("<KeyRelease>", self.check_text)
+
+    def start_timer(self, event=None):
+        if not self.timer_started:
+            self.timer_started = True
+            self.update_timer()
+
+    def update_timer(self, event=None): #updates the text as the timer runs
+        if self.time_left_ms > 0:
+            seconds = (self.time_left_ms // 1000) % 60
+            ms = (self.time_left_ms % 1000) // 10
+
+            self.timer_label.config(text=f"{seconds:02d}.{ms:02d}")
+            self.time_left_ms -= 10
+            self.after(10, self.update_timer)  # call again in 1 second
+        else:
+            self.timer_label.config(text="Time: 0")
+            self.text_box.config(state="disabled")   # stop typing
+        
+    def check_text(self, event=None): # checks text to make sure it's correct
         typed_text = self.text_box.get("1.0", "end-1c")
         original_text = self.random_paragraph
         self.text_box.tag_remove("wrong", "1.0", "end") 
