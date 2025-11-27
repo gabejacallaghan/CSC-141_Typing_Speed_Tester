@@ -41,6 +41,7 @@ class Menu_page(tk.Frame): # Initial page
 class Typing_page(tk.Frame): # Contains paragraph and entry box
     def __init__(self, parent, controller):
         super().__init__(parent)
+        self.controller = controller
         tk.Label(self, text="THIS IS THE TYPING PAGE").pack()
         
         # Paragraphs
@@ -60,6 +61,39 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         tk.Button(self, text="RESULTS (WILL BE TRIGGERED BY TIMER)",
                   command=lambda: controller.show_frame(Result_page)).pack()
         
+
+        self.timer_label = tk.Label(self, text="60", font=("Arial", 40))
+        self.timer_label.pack(pady=20)
+        self.time_left_ms = 60000
+        self.timer_started = False
+
+        self.text_box.bind("<KeyPress>", self.start_timer)
+        self.text_box.bind("<KeyRelease>", self.check_text)
+
+    def start_timer(self, event=None):
+        if not self.timer_started:
+            self.timer_started = True
+            self.update_timer()
+
+    def update_timer(self, event=None): #updates the text as the timer runs
+        if self.time_left_ms > 0:
+            seconds = (self.time_left_ms // 1000) % 60
+            ms = (self.time_left_ms % 1000) // 10
+
+            self.timer_label.config(text=f"{seconds:02d}.{ms:02d}")
+            self.time_left_ms -= 10
+            self.after(10, self.update_timer)  # call again in 1 second
+        else:
+            self.timer_label.config(text="Time: 0")
+            self.text_box.config(state="disabled")   # stop typing
+
+            typed_text = self.text_box.get("1.0", "end-1c")
+            words = typed_text.split()
+            wpm = len(words)
+        
+            self.controller.final_wpm = wpm
+            self.controller.show_frame(Leaderboard_page)
+
     def check_text(self, event=None):
         typed_text = self.text_box.get("1.0", "end-1c") 
         original_text = self.random_paragraph 
@@ -74,15 +108,6 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         
         self.text_box.tag_config("wrong", background="red", foreground="white") # configures "wrong" tag to have red background
 
-    def calculate_wpm(self, elapsed_time):
-        typed_text = self.text_box.get("1.0", "end-1c")
-        words = typed_text.split()
-        num_words = len(words)
-
-        time_minutes = elapsed_time / 60
-        wpm = num_words / time_minutes if time_minutes > 0 else 0
-        return round(wpm)
-        
 class Result_page(tk.Frame): # Contains results, appears at end of timer
     def __init__(self, parent, controller):
         super().__init__(parent)
