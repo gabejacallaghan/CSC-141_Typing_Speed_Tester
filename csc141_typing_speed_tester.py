@@ -39,7 +39,7 @@ class Menu_page(tk.Frame): # Initial page
 class Typing_page(tk.Frame): # Contains paragraph and entry box
     def __init__(self, parent, controller):
         super().__init__(parent)
-        tk.Label(self, text="THIS IS THE TYPING PAGE").pack()
+        self.controller = controller
         
         # Paragraphs
         paragraph_1 = """Macaroni and cheese is one of those classic comfort foods that almost everyone enjoys. The warm cheese sauce blends perfectly with the tender pasta, creating a simple but incredibly satisfying dish. Some people prefer the boxed version for its nostalgic flavor, while others take pride in making it from scratch with real cheese and baked breadcrumbs on top. No matter how it’s prepared, mac and cheese has a way of bringing people together, especially on cold days or during family gatherings. Its versatility also makes it fun to experiment with, whether by adding spices, vegetables, or even different types of cheese. It’s a dish that feels familiar, cozy, and endlessly customizable."""
@@ -50,14 +50,12 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         self.random_paragraph = random_paragraph
 
 
-        tk.Label(self, text="Type the paragraph below:").pack(pady=20)
+        tk.Label(self, text="Test your typing speed below").pack(pady=20)
         self.paragraph_label = tk.Label(self, text=self.random_paragraph, wraplength=500, justify="left")
         self.paragraph_label.pack(pady=20) # displays paragraph
         self.text_box = tk.Text(self, height=10, width=60)
         self.text_box.pack(pady=15) # entry box
         self.text_box.bind("<KeyRelease>", self.check_text) 
-        tk.Button(self, text="RESULTS (WILL BE TRIGGERED BY TIMER)",
-                  command=lambda: controller.show_frame(Result_page)).pack()
         
     # Timer
     
@@ -68,6 +66,9 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
 
         self.text_box.bind("<KeyPress>", self.start_timer)
         self.text_box.bind("<KeyRelease>", self.check_text)
+
+        tk.Button(self, text="RESULTS (WILL BE TRIGGERED BY TIMER)",
+                  command=lambda: controller.show_frame(Result_page)).pack()
 
     def start_timer(self, event=None):
         if not self.timer_started:
@@ -85,7 +86,13 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         else:
             self.timer_label.config(text="Time: 0")
             self.text_box.config(state="disabled")   # stop typing
-        
+            self.controller.show_frame(Result_page)
+
+    
+            
+
+    
+    # Text Checker
     def check_text(self, event=None): # checks text to make sure it's correct
         typed_text = self.text_box.get("1.0", "end-1c")
         original_text = self.random_paragraph
