@@ -86,10 +86,16 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         else:
             self.timer_label.config(text="Time: 0")
             self.text_box.config(state="disabled")   # stop typing
+            wpm = self.calculate_wpm()
+            self.controller.frames[Result_page].update_result(wpm)
             self.controller.show_frame(Result_page)
 
+    def calculate_wpm(self):
+        typed = self.text_box.get("1.0", "end-1c")
+        words = typed.split() # splits text into words
+        return len(words) # num of words typed in the min
     
-            
+
 
     
     # Text Checker
@@ -111,8 +117,13 @@ class Result_page(tk.Frame): # Contains results, appears at end of timer
     def __init__(self, parent, controller):
         super().__init__(parent)
         tk.Label(self, text="THIS IS THE RESULTS PAGE").pack(pady=20)
+        self.result_label = tk.Label(self, text="You Typed 0 WPM", font=(30))
+        self.result_label.pack(pady=10)
         tk.Button(self, text="See Leaderboard",
                   command=lambda: controller.show_frame(Leaderboard_page)).pack()
+        
+    def update_result(self, wpm):
+        self.result_label.config(text=f"You Typed {wpm} WPM") # Updates label with your score
 
 class Leaderboard_page(tk.Frame): # Contains saved scores
     def __init__(self, parent, controller):
