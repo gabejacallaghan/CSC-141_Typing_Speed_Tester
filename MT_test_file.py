@@ -10,7 +10,7 @@ SCORE_FILE = "scores.json"
 
 if not os.path.exists(SCORE_FILE):
     with open(SCORE_FILE, "w") as f:
-        f.write("[]")
+        json.dump([], f)
 
 def load_scores():
     """Load scores from disk; return empty list if file doesn't exist or is invalid."""
@@ -63,7 +63,7 @@ class Menu_page(tk.Frame): # Initial page
     def __init__(self, parent, controller): #parent is the container frame where it will live, and controller is the App instance (used to switch pages)
         super().__init__(parent)
 
-        # Logo Display ##########################################################
+        # # Logo Display ##########################################################
         img = Image.open("new_image.png")  # supports PNG transparency
         img = img.resize((250, 250), Image.LANCZOS)  # resizes the image
         self.logo = ImageTk.PhotoImage(img)
@@ -131,16 +131,28 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         else:
             self.timer_label.config(text="Time: 0")
             self.text_box.config(state="disabled")   # stop typing
-            wpm = self.calculate_wpm() # calls function that calculates the words per minute
-            self.controller.frames[Result_page].update_result(wpm)
+            wpm, incorrect = self.calculate_wpm() # calls function that calculates the words per minute
+            self.controller.frames[Result_page].update_result(wpm, incorrect)
             self.controller.show_frame(Result_page)
     #########################################################################
 
     # WPM Calculator ########################################################
     def calculate_wpm(self):
-        typed = self.text_box.get("1.0", "end-1c")
-        words = typed.split() # splits text into words
-        return len(words) # num of words typed in the min
+        typed = self.text_box.get("1.0", "end-1c").strip()
+        target_words = self.random_paragraph.split()
+        user_words = typed.split()
+
+        correct = 0
+        incorrect = 0
+
+        for i in range(min(len(target_words), len(user_words))):
+            if user_words[i] == target_words[i]:
+                correct += 1
+            else:
+                incorrect += 1
+
+        wpm = correct
+        return wpm, incorrect
     #########################################################################
     
     # Text Checker ##########################################################
@@ -174,9 +186,9 @@ class Result_page(tk.Frame): # Contains results, appears at end of timer
         tk.Label(self, text="THIS IS THE RESULTS PAGE").pack(pady=20) #DELETE EVENTUALLY
         
     # 'WPM Result Display' Updater and Save #################################
-    def update_result(self, wpm):
-        self.result_label.config(text=f"You Typed {wpm} WPM") # Updates label with your score
-        self.controller.scores.append(wpm)
+    def update_result(self, wpm, incorrect):
+        self.result_label.config(text=f"You Typed {wpm} WPM\nIncorrect Words: {incorrect}") # Updates label with your score
+        self.controller.scores.append({"name": "", "score": wpm}) 
         save_scores(self.controller.scores)
     #########################################################################
 
