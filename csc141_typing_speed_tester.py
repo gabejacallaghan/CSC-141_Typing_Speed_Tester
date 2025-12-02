@@ -164,13 +164,16 @@ class Result_page(tk.Frame): # Contains results, appears at end of timer
         self.controller = controller
 
         # WPM Result Display ####################################################
-        self.you_typed_label = tk.Label(self, text="You Typed", font=("Helvetica", 30)).pack(pady=10)
-        self.result_label = tk.Label(self, text="0 WPM", font=("Helvetica", 80)).pack()
+        self.you_typed_label = tk.Label(self, text="You Typed", font=("Helvetica", 30))
+        self.you_typed_label.pack(pady=10)
+        self.result_label = tk.Label(self, text="0 WPM", font=("Helvetica", 80))
+        self.result_label.pack()
         #########################################################################
 
         # Buttons to Save Score and Go To Leaderboard #############################
         tk.Label(self, text="Enter your name to save your score").pack(pady=(20,5))
-        self.name_entry = tk.Entry(self).pack(pady=5)
+        self.name_entry = tk.Entry(self)
+        self.name_entry.pack(pady=5)
         tk.Button(self, text="Save",
                   command=self.save_score).pack()
         tk.Button(self, text="See Leaderboard",
@@ -179,19 +182,17 @@ class Result_page(tk.Frame): # Contains results, appears at end of timer
         
     # 'WPM Result Display' Updater and Save #################################
     def update_result(self, wpm):
+        self.wpm = wpm
         self.result_label.config(text=f"{wpm} WPM")
-        score_entry = {"name": "Anonymous", "score": wpm} # Saves score as a dictionary
-        self.controller.scores.append(score_entry)
-        save_scores(self.controller.scores)
-        self.current_wpm = wpm
     #########################################################################
 
     # Score Saves to Dictionary #############################################
     def save_score(self):
         name = self.name_entry.get().strip() or "Anonymous"
-        score_entry = {"name": name, "score": self.current_wpm}
+        score_entry = {"name": name, "score": self.wpm}
         self.controller.scores.append(score_entry)
         save_scores(self.controller.scores)
+        self.name_entry.delete(0, "end") # clears entry box
     #########################################################################
 
 class Leaderboard_page(tk.Frame): # Contains saved scores
