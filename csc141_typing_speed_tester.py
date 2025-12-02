@@ -5,7 +5,7 @@ from PIL import Image, ImageTk
 import json
 import os
 
-# Score Saves ###########################################################
+# Score Saver ###########################################################
 SCORE_FILE = "scores.json"
 
 if not os.path.exists(SCORE_FILE):
@@ -164,32 +164,42 @@ class Result_page(tk.Frame): # Contains results, appears at end of timer
         self.controller = controller
 
         # WPM Result Display ####################################################
-        self.result_label = tk.Label(self, text="You Typed 0 WPM", font=(30))
-        self.result_label.pack(pady=10)
+        self.you_typed_label = tk.Label(self, text="You Typed", font=("Helvetica", 30)).pack(pady=10)
+        self.result_label = tk.Label(self, text="0 WPM", font=("Helvetica", 80)).pack()
         #########################################################################
 
+        # Buttons to Save Score and Go To Leaderboard #############################
+        tk.Label(self, text="Enter your name to save your score").pack(pady=(20,5))
+        self.name_entry = tk.Entry(self).pack(pady=5)
+        tk.Button(self, text="Save",
+                  command=self.save_score).pack()
         tk.Button(self, text="See Leaderboard",
-                  command=lambda: controller.show_frame(Leaderboard_page)).pack()
-        
-        tk.Label(self, text="THIS IS THE RESULTS PAGE").pack(pady=20) #DELETE EVENTUALLY
+                  command=lambda: controller.show_frame(Leaderboard_page)).pack(pady=10)
+        #########################################################################
         
     # 'WPM Result Display' Updater and Save #################################
     def update_result(self, wpm):
-        self.result_label.config(text=f"You Typed {wpm} WPM") # Updates label with your score
-        self.controller.scores.append(wpm)
+        self.result_label.config(text=f"{wpm} WPM")
+        score_entry = {"name": "Anonymous", "score": wpm} # Saves score as a dictionary
+        self.controller.scores.append(score_entry)
         save_scores(self.controller.scores)
+        self.current_wpm = wpm
     #########################################################################
 
+    # Score Saves to Dictionary #############################################
     def save_score(self):
         name = self.name_entry.get().strip() or "Anonymous"
         score_entry = {"name": name, "score": self.current_wpm}
         self.controller.scores.append(score_entry)
         save_scores(self.controller.scores)
+    #########################################################################
 
 class Leaderboard_page(tk.Frame): # Contains saved scores
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
+
+        leaderboard_label = tk.Label(self, text="Local Leaderboard", font=("Helvetica", 40)).pack(pady=20)
 
         self.list_label = tk.Label(self, text="")
         self.list_label.pack(pady=10)
@@ -201,7 +211,6 @@ class Leaderboard_page(tk.Frame): # Contains saved scores
                   command=lambda: controller.show_frame(Typing_page)).pack()
         #########################################################################
 
-        tk.Label(self, text="THIS IS THE LEADERBOARD PAGE").pack(pady=20) #DELETE EVENTUALLY
 
     def tkraise(self):
         super().tkraise()
