@@ -26,9 +26,9 @@ def load_scores():
         return []
 
 def save_scores(scores):
-    """Save the list of scores to disk, keeping top 10 only."""
-    # Keep only top 10 scores
-    top_scores = sorted(scores, key=lambda x: x["score"], reverse=True)[:10]
+    """Save the list of scores to disk, keeping top 5 only."""
+    # Keep only top 5 scores
+    top_scores = sorted(scores, key=lambda x: x["score"], reverse=True)[:5]
     with open(SCORE_FILE, "w") as f:
         json.dump(top_scores, f, indent=4)
 #########################################################################
@@ -226,10 +226,11 @@ class Leaderboard_page(tk.Frame): # Contains saved scores
         super().__init__(parent)
         self.controller = controller
 
+        # Leaderboard ###########################################################
         leaderboard_label = tk.Label(self, text="Local Leaderboard", font=("Helvetica", 40)).pack(pady=20)
-
         self.list_label = tk.Label(self, text="")
         self.list_label.pack(pady=10)
+        #########################################################################
 
         # 'Menu' and 'Try Again' Buttons ########################################
         tk.Button(self, text="Menu",
@@ -237,7 +238,6 @@ class Leaderboard_page(tk.Frame): # Contains saved scores
         tk.Button(self, text="Try Again",
                   command=lambda: controller.show_frame(Typing_page)).pack()
         #########################################################################
-
 
     def tkraise(self):
         super().tkraise()
