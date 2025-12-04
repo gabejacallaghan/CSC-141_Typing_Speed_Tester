@@ -13,8 +13,7 @@ if not os.path.exists(SCORE_FILE):
         f.write("[]")
 
 def load_scores():
-    """Load scores from disk; return empty list if file doesn't exist or is invalid."""
-    if not os.path.exists(SCORE_FILE):
+    if not os.path.exists(SCORE_FILE): # Loads scores and doesn't break now when there's no file
         return []
     try:
         with open(SCORE_FILE, "r") as f:
@@ -26,9 +25,7 @@ def load_scores():
         return []
 
 def save_scores(scores):
-    """Save the list of scores to disk, keeping top 5 only."""
-    # Keep only top 5 scores
-    top_scores = sorted(scores, key=lambda x: x["score"], reverse=True)[:5]
+    top_scores = sorted(scores, key=lambda x: x["score"], reverse=True)[:5] #keeps only top five
     with open(SCORE_FILE, "w") as f:
         json.dump(top_scores, f, indent=4)
 #########################################################################
@@ -216,9 +213,13 @@ class Result_page(tk.Frame): # Contains results, appears at end of timer
     def save_score(self):
         name = self.name_entry.get().strip() or "Anonymous"
         score_entry = {"name": name, "score": self.wpm}
+        self.controller.scores = [                  #
+        entry for entry in self.controller.scores   # Removes scores with the saem name
+        if entry["name"].lower() != name.lower()    #
+    ]
         self.controller.scores.append(score_entry)
-        save_scores(self.controller.scores)
-        self.name_entry.delete(0, "end") # clears entry box
+        save_scores(self.controller.scores) # saves scores to disk
+        self.name_entry.delete(0, "end")
     #########################################################################
 
 class Leaderboard_page(tk.Frame): # Contains saved scores
