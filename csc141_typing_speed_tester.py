@@ -82,11 +82,11 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         self.controller = controller
         
         # Random Paragraph Selector #############################################
-        paragraph_1 = """Macaroni and cheese is one of those classic comfort foods that almost everyone enjoys. The warm cheese sauce blends perfectly with the tender pasta, creating a simple but incredibly satisfying dish. Some people prefer the boxed version for its nostalgic flavor, while others take pride in making it from scratch with real cheese and baked breadcrumbs on top. No matter how it's prepared, mac and cheese has a way of bringing people together, especially on cold days or during family gatherings. Its versatility also makes it fun to experiment with, whether by adding spices, vegetables, or even different types of cheese. It's a dish that feels familiar, cozy, and endlessly customizable."""
-        paragraph_2 = """On quiet autumn mornings, there's a particular stillness that seems almost intentional, as if the world is pausing just long enough for anyone paying attention to notice the small details usually lost in the rush of everyday life. The light filters through thinning leaves at an angle that feels softer than summer sunlight, carrying a faint golden tint that settles gently on everything it touches. Even the sounds shift: birds call in slower, clearer rhythms, and distant traffic seems muffled, as though wrapped in a blanket of cool air. People walking through a park at this hour often move with a kind of unspoken agreement not to disturb the calm, taking slower steps, breathing a little deeper, and letting their thoughts drift without urgency. It's in these moments that the mind seems to reorder itself naturally, drawing connections between memories, hopes, and half-formed ideas, creating a rare sense of clarity that lingers quietly throughout the rest of the day."""
-        paragraph_3 = """Sometimes I imagine what it would be like to spend a full day inside an old, quiet library--the kind with tall wooden shelves, a faint smell of paper and dust, and large windows that let in soft, filtered light even on cloudy afternoons. There's something soothing about the way sound behaves in spaces like that, as if footsteps and whispers are automatically lowered out of respect for the thousands of stories resting on the shelves. You can wander past rows of books without any particular plan and still feel a sense of purpose, because every spine you pass represents a small doorway into someone else's imagination or memory. Finding a seat at a heavy wooden table, you might open a random volume and discover a topic you've never thought about before, letting your curiosity lead you from one idea to the next. Hours can slip by almost unnoticed in such a place, leaving you with a pleasant sense of quiet accomplishment, even if all you did was read, think, and breathe in the calm."""
-        paragraph_4 = """Under the flicker of a dying streetlamp, I found myself staring at the kind of scene that makes a man question whether he's dreaming or just losing his grip on the edges of reality. The rain had turned the cracked pavement behind the Walmart into a slick sheet of shadow and reflection, and through the mist lumbered three pink elephants—yes, pink, like bubblegum dipped in moonlight—moving with the heavy confidence of creatures who knew nobody would dare cross them. Their tusks glinted like ivory switchblades as they guarded the entrance to a rusted loading bay, where muffled grunts and the dull thud of fists against flesh leaked out between the metal slats. Word on the street was that they ran the roughest underground fight club in the county, the kind of joint where a man could lose his wallet, his dignity, or his last good tooth in under ten minutes if he wasn't careful. As I watched them size me up with small, knowing eyes, I realized I had two choices: turn around and forget what I'd seen, or step inside and find out why even the bravest folks in town whispered about this place only after dark."""
-        random_paragraph = random.choice([paragraph_1, paragraph_2, paragraph_3, paragraph_4]) # chooses a random paragraph (using import random) from 1-4
+        self.paragraph_1 = """Macaroni and cheese is one of those classic comfort foods that almost everyone enjoys. The warm cheese sauce blends perfectly with the tender pasta, creating a simple but incredibly satisfying dish. Some people prefer the boxed version for its nostalgic flavor, while others take pride in making it from scratch with real cheese and baked breadcrumbs on top. No matter how it's prepared, mac and cheese has a way of bringing people together, especially on cold days or during family gatherings. Its versatility also makes it fun to experiment with, whether by adding spices, vegetables, or even different types of cheese. It's a dish that feels familiar, cozy, and endlessly customizable."""
+        self.paragraph_2 = """On quiet autumn mornings, there's a particular stillness that seems almost intentional, as if the world is pausing just long enough for anyone paying attention to notice the small details usually lost in the rush of everyday life. The light filters through thinning leaves at an angle that feels softer than summer sunlight, carrying a faint golden tint that settles gently on everything it touches. Even the sounds shift: birds call in slower, clearer rhythms, and distant traffic seems muffled, as though wrapped in a blanket of cool air. People walking through a park at this hour often move with a kind of unspoken agreement not to disturb the calm, taking slower steps, breathing a little deeper, and letting their thoughts drift without urgency. It's in these moments that the mind seems to reorder itself naturally, drawing connections between memories, hopes, and half-formed ideas, creating a rare sense of clarity that lingers quietly throughout the rest of the day."""
+        self.paragraph_3 = """Sometimes I imagine what it would be like to spend a full day inside an old, quiet library--the kind with tall wooden shelves, a faint smell of paper and dust, and large windows that let in soft, filtered light even on cloudy afternoons. There's something soothing about the way sound behaves in spaces like that, as if footsteps and whispers are automatically lowered out of respect for the thousands of stories resting on the shelves. You can wander past rows of books without any particular plan and still feel a sense of purpose, because every spine you pass represents a small doorway into someone else's imagination or memory. Finding a seat at a heavy wooden table, you might open a random volume and discover a topic you've never thought about before, letting your curiosity lead you from one idea to the next. Hours can slip by almost unnoticed in such a place, leaving you with a pleasant sense of quiet accomplishment, even if all you did was read, think, and breathe in the calm."""
+        self.paragraph_4 = """Under the flicker of a dying streetlamp, I found myself staring at the kind of scene that makes a man question whether he's dreaming or just losing his grip on the edges of reality. The rain had turned the cracked pavement behind the Walmart into a slick sheet of shadow and reflection, and through the mist lumbered three pink elephants—yes, pink, like bubblegum dipped in moonlight—moving with the heavy confidence of creatures who knew nobody would dare cross them. Their tusks glinted like ivory switchblades as they guarded the entrance to a rusted loading bay, where muffled grunts and the dull thud of fists against flesh leaked out between the metal slats. Word on the street was that they ran the roughest underground fight club in the county, the kind of joint where a man could lose his wallet, his dignity, or his last good tooth in under ten minutes if he wasn't careful. As I watched them size me up with small, knowing eyes, I realized I had two choices: turn around and forget what I'd seen, or step inside and find out why even the bravest folks in town whispered about this place only after dark."""
+        random_paragraph = random.choice([self.paragraph_1, self.paragraph_2, self.paragraph_3, self.paragraph_4]) # chooses a random paragraph (using import random) from 1-4
         self.random_paragraph = random_paragraph
         #########################################################################
 
@@ -180,7 +180,22 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
                 end = f"1.0 + {i+1} chars" # ends tagging one character after start
                 self.text_box.tag_add("wrong", start, end) # adds "wrong" tag to incorrect characters
     #########################################################################
-        
+
+    # Page Resetter #########################################################
+    def reset_page(self):
+        self.time_left_ms = 60000 #reset timer
+        self.timer_started = False
+        self.timer_label.config(text="60")
+        self.text_box.config(state="normal") #delete typed text
+        self.text_box.delete("1.0", "end")
+        new_paragraph = random.choice([self.paragraph_1, self.paragraph_2, self.paragraph_3, self.paragraph_4]) #new paragraph
+        self.random_paragraph = new_paragraph
+        self.paragraph_display.config(state="normal") #reset text
+        self.paragraph_display.delete("1.0", "end")
+        self.paragraph_display.insert("1.0", new_paragraph)
+        self.paragraph_display.config(state="disabled")
+    #########################################################################      
+
 class Result_page(tk.Frame): # Contains results, appears at end of timer
     def __init__(self, parent, controller):
         super().__init__(parent)
@@ -235,10 +250,15 @@ class Leaderboard_page(tk.Frame): # Contains saved scores
 
         # 'Menu' and 'Try Again' Buttons ########################################
         tk.Button(self, text="Menu",
-                  command=lambda: controller.show_frame(Menu_page)).pack()
-        tk.Button(self, text="Try Again",
-                  command=lambda: controller.show_frame(Typing_page)).pack()
+            command=self.go_to_menu_and_reset).pack()
         #########################################################################
+
+    # Reset and Go to Menu ##################################################
+    def go_to_menu_and_reset(self):
+        self.controller.frames[Result_page].name_entry.delete(0, "end") #clear save results name entry
+        self.controller.frames[Typing_page].reset_page() #reset typing page
+        self.controller.show_frame(Menu_page) #go to menu
+    #########################################################################
 
     def tkraise(self):
         super().tkraise()
