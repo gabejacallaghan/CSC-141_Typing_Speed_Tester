@@ -96,10 +96,15 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         tk.Label(self, text="Test your typing speed below", font=("Arial", 25)).pack(pady=20)
 
         # Paragraph Display and Entry Box #######################################
-        self.paragraph_label = tk.Label(self, text=self.random_paragraph, wraplength=500, justify="left")
-        self.paragraph_label.pack(pady=20) # displays paragraph
-        self.text_box = tk.Text(self, height=10, width=60)
-        self.text_box.pack(pady=15) # entry box
+        self.paragraph_display = tk.Text(self, height=12, width=70, wrap="word", font=("Arial", 11))
+        self.paragraph_display.insert("1.0", self.random_paragraph)
+        self.paragraph_display.config(state="disabled")
+        self.paragraph_display.tag_config("correct", background="#7bf47b")
+        self.paragraph_display.pack(pady=10)
+
+        self.text_box = tk.Text(self, height=10, width=60, wrap="word")
+        self.text_box.pack(pady=15)
+        self.text_box.tag_config("wrong", background="#fc4848")
         self.text_box.bind("<KeyRelease>", self.check_text)
         #########################################################################
         
@@ -138,15 +143,37 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
 
     # WPM Calculator ########################################################
     def calculate_wpm(self):
-        typed = self.text_box.get("1.0", "end-1c")
-        words = typed.split() # splits text into words
-        return len(words) # num of words typed in the min
+        typed = self.text_box.get("1.0", "end-1c").strip()
+        target_words = self.random_paragraph.split()
+        typed_words = typed.split()
+        
+        correct = 0
+        
+        for i in range(min(len(target_words), len(typed_words))):
+            if typed_words[i] == target_words[i]:
+                correct += 1
+
+        wpm = correct
+       
+        return wpm
     #########################################################################
     
     # Text Checker ##########################################################
     def check_text(self, event=None): # checks text to make sure it's correct
         typed_text = self.text_box.get("1.0", "end-1c")
         original_text = self.random_paragraph
+        
+        self.paragraph_display.config(state="normal")
+        self.paragraph_display.tag_remove("correct", "1.0", "end")
+        for i in range(min(len(typed_text), len(original_text))):
+            if typed_text[i] == original_text[i]:
+                start = f"1.0 + {i} chars"
+                end = f"1.0 + {i+1} chars"
+                self.paragraph_display.tag_add("correct", start, end)
+            else:
+                break
+        self.paragraph_display.config(state="disabled")
+        
         self.text_box.tag_remove("wrong", "1.0", "end") 
         for i in range(len(typed_text)): # loops through each character in typed_text
             if i >= len(original_text): 
@@ -155,7 +182,6 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
                 start = f"1.0 + {i} chars" # calculates start position for tagging
                 end = f"1.0 + {i+1} chars" # ends tagging one character after start
                 self.text_box.tag_add("wrong", start, end) # adds "wrong" tag to incorrect characters
-        self.text_box.tag_config("wrong", background="red", foreground="white") # configures "wrong" tag to have red background
     #########################################################################
         
 class Result_page(tk.Frame): # Contains results, appears at end of timer

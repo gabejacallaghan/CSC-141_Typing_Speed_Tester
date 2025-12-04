@@ -6,31 +6,31 @@ import json
 import os
 
 # Score Saves ###########################################################
-SCORE_FILE = "scores.json"
+# SCORE_FILE = "scores.json"
 
-if not os.path.exists(SCORE_FILE):
-    with open(SCORE_FILE, "w") as f:
-        json.dump([], f)
+# if not os.path.exists(SCORE_FILE):
+#     with open(SCORE_FILE, "w") as f:
+#         json.dump([], f)
 
-def load_scores():
-    """Load scores from disk; return empty list if file doesn't exist or is invalid."""
-    if not os.path.exists(SCORE_FILE):
-        return []
-    try:
-        with open(SCORE_FILE, "r") as f:
-            data = f.read().strip()
-            if not data:
-                return []
-            return json.loads(data)
-    except json.JSONDecodeError:
-        return []
+# def load_scores():
+#     """Load scores from disk; return empty list if file doesn't exist or is invalid."""
+#     if not os.path.exists(SCORE_FILE):
+#         return []
+#     try:
+#         with open(SCORE_FILE, "r") as f:
+#             data = f.read().strip()
+#             if not data:
+#                 return []
+#             return json.loads(data)
+#     except json.JSONDecodeError:
+#         return []
 
-def save_scores(scores):
-    """Save the list of scores to disk, keeping top 10 only."""
-    # Keep only top 10 scores
-    top_scores = sorted(scores, key=lambda x: x["score"], reverse=True)[:10]
-    with open(SCORE_FILE, "w") as f:
-        json.dump(top_scores, f, indent=4)
+# def save_scores(scores):
+#     """Save the list of scores to disk, keeping top 10 only."""
+#     # Keep only top 10 scores
+#     top_scores = sorted(scores, key=lambda x: x["score"], reverse=True)[:10]
+#     with open(SCORE_FILE, "w") as f:
+#         json.dump(top_scores, f, indent=4)
 #########################################################################
 
 # App and Page Switcher##################################################
@@ -51,7 +51,7 @@ class App(tk.Tk): # Defines new class that inherits from tk.Tk
 
         self.show_frame(Menu_page)  #displays Menu page first
 
-        self.scores = load_scores()
+        #self.scores = load_scores()
 
     def show_frame(self, page): #method to switch between frames
         frame = self.frames[page] #looks up the frame from the self.frames dictionary
@@ -96,10 +96,15 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         tk.Label(self, text="Test your typing speed below", font=("Arial", 25)).pack(pady=20)
 
         # Paragraph Display and Entry Box #######################################
-        self.paragraph_label = tk.Label(self, text=self.random_paragraph, wraplength=500, justify="left")
-        self.paragraph_label.pack(pady=20) # displays paragraph
-        self.text_box = tk.Text(self, height=10, width=60)
-        self.text_box.pack(pady=15) # entry box
+        self.paragraph_display = tk.Text(self, height=7, width=70, wrap="word")
+        self.paragraph_display.insert("1.0", self.random_paragraph)
+        self.paragraph_display.config(state="disabled")
+        self.paragraph_display.tag_config("correct", background="#7bf47b")
+        self.paragraph_display.pack(pady=10)
+
+        self.text_box = tk.Text(self, height=10, width=60, wrap="word")
+        self.text_box.pack(pady=15)
+        self.text_box.tag_config("wrong", background="#fc4848")
         self.text_box.bind("<KeyRelease>", self.check_text)
         #########################################################################
         
@@ -159,6 +164,18 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
     def check_text(self, event=None): # checks text to make sure it's correct
         typed_text = self.text_box.get("1.0", "end-1c")
         original_text = self.random_paragraph
+
+        self.paragraph_display.config(state="normal")
+        self.paragraph_display.tag_remove("correct", "1.0", "end")
+        for i in range(min(len(typed_text), len(original_text))):
+            if typed_text[i] == original_text[i]:
+                start = f"1.0 + {i} chars"
+                end = f"1.0 + {i+1} chars"
+                self.paragraph_display.tag_add("correct", start, end)
+            else:
+                break
+        self.paragraph_display.config(state="disabled")
+       
         self.text_box.tag_remove("wrong", "1.0", "end") 
         for i in range(len(typed_text)): # loops through each character in typed_text
             if i >= len(original_text): 
@@ -167,8 +184,7 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
                 start = f"1.0 + {i} chars" # calculates start position for tagging
                 end = f"1.0 + {i+1} chars" # ends tagging one character after start
                 self.text_box.tag_add("wrong", start, end) # adds "wrong" tag to incorrect characters
-        self.text_box.tag_config("wrong", background="red", foreground="white") # configures "wrong" tag to have red background
-    #########################################################################
+        
         
 class Result_page(tk.Frame): # Contains results, appears at end of timer
     def __init__(self, parent, controller):
@@ -189,14 +205,14 @@ class Result_page(tk.Frame): # Contains results, appears at end of timer
     def update_result(self, wpm, incorrect):
         self.result_label.config(text=f"You Typed {wpm} WPM\nIncorrect Words: {incorrect}") # Updates label with your score
         self.controller.scores.append({"name": "", "score": wpm}) 
-        save_scores(self.controller.scores)
+        #save_scores(self.controller.scores)
     #########################################################################
 
     def save_score(self):
         name = self.name_entry.get().strip() or "Anonymous"
         score_entry = {"name": name, "score": self.current_wpm}
         self.controller.scores.append(score_entry)
-        save_scores(self.controller.scores)
+        #save_scores(self.controller.scores)
 
 class Leaderboard_page(tk.Frame): # Contains saved scores
     def __init__(self, parent, controller):
