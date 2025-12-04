@@ -72,7 +72,7 @@ class Menu_page(tk.Frame): # Initial page
         # 'Start' and 'Leaderboard' Buttons #####################################
         tk.Button(self, text="Start",
                   command=lambda: controller.show_frame(Typing_page)).pack()
-        tk.Button(self, text="See Leaderboard",
+        tk.Button(self, text="Leaderboard",
                   command=lambda: controller.show_frame(Leaderboard_page)).pack()
         #########################################################################
 
@@ -93,7 +93,7 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         tk.Label(self, text="Test your typing speed below", font=("Arial", 25)).pack(pady=20)
 
         # Paragraph Display and Entry Box #######################################
-        self.paragraph_display = tk.Text(self, height=12, width=70, wrap="word", font=("Arial", 11))
+        self.paragraph_display = tk.Text(self, height=12, width=70, wrap="word", font=("Arial", 15))
         self.paragraph_display.insert("1.0", self.random_paragraph)
         self.paragraph_display.config(state="disabled")
         self.paragraph_display.tag_config("correct", background="#7bf47b")
@@ -198,9 +198,9 @@ class Result_page(tk.Frame): # Contains results, appears at end of timer
         self.name_entry = tk.Entry(self)
         self.name_entry.pack(pady=5)
         tk.Button(self, text="Save",
-                  command=self.save_score).pack()
+                  command=lambda: (controller.show_frame(Leaderboard_page), self.save_score)).pack()
         tk.Button(self, text="See Leaderboard",
-                  command=lambda: controller.show_frame(Leaderboard_page)).pack(pady=10)
+                  command=lambda: controller.show_frame(Leaderboard_page)).pack(pady=15)
         #########################################################################
         
     # 'WPM Result Display' Updater and Save #################################
@@ -212,13 +212,13 @@ class Result_page(tk.Frame): # Contains results, appears at end of timer
     # Score Saves to Dictionary #############################################
     def save_score(self):
         name = self.name_entry.get().strip() or "Anonymous"
-        score_entry = {"name": name, "score": self.wpm}
-        self.controller.scores = [                  #
-        entry for entry in self.controller.scores   # Removes scores with the saem name
-        if entry["name"].lower() != name.lower()    #
-    ]
-        self.controller.scores.append(score_entry)
-        save_scores(self.controller.scores) # saves scores to disk
+        existing = next((s for s in self.controller.scores 
+                     if s["name"].lower() == name.lower()), None)
+        if existing:
+            existing["score"] = max(existing["score"], self.wpm) # keep higher score
+        else:
+            self.controller.scores.append({"name": name, "score": self.wpm})
+        save_scores(self.controller.scores)
         self.name_entry.delete(0, "end")
     #########################################################################
 
