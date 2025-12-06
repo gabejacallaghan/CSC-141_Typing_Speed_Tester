@@ -97,6 +97,7 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         self.paragraph_display.insert("1.0", self.random_paragraph)
         self.paragraph_display.config(state="disabled")
         self.paragraph_display.tag_config("correct", background="#7bf47b")
+        self.paragraph_display.tag_config("wrong", background="#fc4848")
         self.paragraph_display.pack(pady=10)
 
         self.text_box = tk.Text(self, height=10, width=60, wrap="word")
@@ -162,15 +163,22 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         
         self.paragraph_display.config(state="normal")
         self.paragraph_display.tag_remove("correct", "1.0", "end")
-        for i in range(min(len(typed_text), len(original_text))):
+        self.paragraph_display.tag_remove("wrong", "1.0", "end")
+
+        n = min(len(typed_text), len(original_text))
+
+        # Marks each character correct or incorrect in display
+        for i in range(n):
+            start = f"1.0 + {i} chars"
+            end = f"1.0 + {i+1} chars"
             if typed_text[i] == original_text[i]:
-                start = f"1.0 + {i} chars"
-                end = f"1.0 + {i+1} chars"
                 self.paragraph_display.tag_add("correct", start, end)
             else:
-                break
+                self.paragraph_display.tag_add("wrong", start, end)
+
         self.paragraph_display.config(state="disabled")
-        
+
+        # Marks incorrect in typing box
         self.text_box.tag_remove("wrong", "1.0", "end") 
         for i in range(len(typed_text)): # loops through each character in typed_text
             if i >= len(original_text): 

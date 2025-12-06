@@ -13,8 +13,7 @@ if not os.path.exists(SCORE_FILE):
         f.write("[]")
 
 def load_scores():
-    """Load scores from disk; return empty list if file doesn't exist or is invalid."""
-    if not os.path.exists(SCORE_FILE):
+    if not os.path.exists(SCORE_FILE): # Loads scores and doesn't break now when there's no file
         return []
     try:
         with open(SCORE_FILE, "r") as f:
@@ -26,9 +25,7 @@ def load_scores():
         return []
 
 def save_scores(scores):
-    """Save the list of scores to disk, keeping top 5 only."""
-    # Keep only top 5 scores
-    top_scores = sorted(scores, key=lambda x: x["score"], reverse=True)[:5]
+    top_scores = sorted(scores, key=lambda x: x["score"], reverse=True)[:5] #keeps only top five
     with open(SCORE_FILE, "w") as f:
         json.dump(top_scores, f, indent=4)
 #########################################################################
@@ -75,7 +72,7 @@ class Menu_page(tk.Frame): # Initial page
         # 'Start' and 'Leaderboard' Buttons #####################################
         tk.Button(self, text="Start",
                   command=lambda: controller.show_frame(Typing_page)).pack()
-        tk.Button(self, text="See Leaderboard",
+        tk.Button(self, text="Leaderboard",
                   command=lambda: controller.show_frame(Leaderboard_page)).pack()
         #########################################################################
 
@@ -85,21 +82,22 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         self.controller = controller
         
         # Random Paragraph Selector #############################################
-        paragraph_1 = """Macaroni and cheese is one of those classic comfort foods that almost everyone enjoys. The warm cheese sauce blends perfectly with the tender pasta, creating a simple but incredibly satisfying dish. Some people prefer the boxed version for its nostalgic flavor, while others take pride in making it from scratch with real cheese and baked breadcrumbs on top. No matter how it's prepared, mac and cheese has a way of bringing people together, especially on cold days or during family gatherings. Its versatility also makes it fun to experiment with, whether by adding spices, vegetables, or even different types of cheese. It's a dish that feels familiar, cozy, and endlessly customizable."""
-        paragraph_2 = """On quiet autumn mornings, there's a particular stillness that seems almost intentional, as if the world is pausing just long enough for anyone paying attention to notice the small details usually lost in the rush of everyday life. The light filters through thinning leaves at an angle that feels softer than summer sunlight, carrying a faint golden tint that settles gently on everything it touches. Even the sounds shift: birds call in slower, clearer rhythms, and distant traffic seems muffled, as though wrapped in a blanket of cool air. People walking through a park at this hour often move with a kind of unspoken agreement not to disturb the calm, taking slower steps, breathing a little deeper, and letting their thoughts drift without urgency. It's in these moments that the mind seems to reorder itself naturally, drawing connections between memories, hopes, and half-formed ideas, creating a rare sense of clarity that lingers quietly throughout the rest of the day."""
-        paragraph_3 = """Sometimes I imagine what it would be like to spend a full day inside an old, quiet library--the kind with tall wooden shelves, a faint smell of paper and dust, and large windows that let in soft, filtered light even on cloudy afternoons. There's something soothing about the way sound behaves in spaces like that, as if footsteps and whispers are automatically lowered out of respect for the thousands of stories resting on the shelves. You can wander past rows of books without any particular plan and still feel a sense of purpose, because every spine you pass represents a small doorway into someone else's imagination or memory. Finding a seat at a heavy wooden table, you might open a random volume and discover a topic you've never thought about before, letting your curiosity lead you from one idea to the next. Hours can slip by almost unnoticed in such a place, leaving you with a pleasant sense of quiet accomplishment, even if all you did was read, think, and breathe in the calm."""
-        paragraph_4 = """Under the flicker of a dying streetlamp, I found myself staring at the kind of scene that makes a man question whether he's dreaming or just losing his grip on the edges of reality. The rain had turned the cracked pavement behind the Walmart into a slick sheet of shadow and reflection, and through the mist lumbered three pink elephants—yes, pink, like bubblegum dipped in moonlight—moving with the heavy confidence of creatures who knew nobody would dare cross them. Their tusks glinted like ivory switchblades as they guarded the entrance to a rusted loading bay, where muffled grunts and the dull thud of fists against flesh leaked out between the metal slats. Word on the street was that they ran the roughest underground fight club in the county, the kind of joint where a man could lose his wallet, his dignity, or his last good tooth in under ten minutes if he wasn't careful. As I watched them size me up with small, knowing eyes, I realized I had two choices: turn around and forget what I'd seen, or step inside and find out why even the bravest folks in town whispered about this place only after dark."""
-        random_paragraph = random.choice([paragraph_1, paragraph_2, paragraph_3, paragraph_4]) # chooses a random paragraph (using import random) from 1-4
+        self.paragraph_1 = """Macaroni and cheese is one of those classic comfort foods that almost everyone enjoys. The warm cheese sauce blends perfectly with the tender pasta, creating a simple but incredibly satisfying dish. Some people prefer the boxed version for its nostalgic flavor, while others take pride in making it from scratch with real cheese and baked breadcrumbs on top. No matter how it's prepared, mac and cheese has a way of bringing people together, especially on cold days or during family gatherings. Its versatility also makes it fun to experiment with, whether by adding spices, vegetables, or even different types of cheese. It's a dish that feels familiar, cozy, and endlessly customizable."""
+        self.paragraph_2 = """On quiet autumn mornings, there's a particular stillness that seems almost intentional, as if the world is pausing just long enough for anyone paying attention to notice the small details usually lost in the rush of everyday life. The light filters through thinning leaves at an angle that feels softer than summer sunlight, carrying a faint golden tint that settles gently on everything it touches. Even the sounds shift: birds call in slower, clearer rhythms, and distant traffic seems muffled, as though wrapped in a blanket of cool air. People walking through a park at this hour often move with a kind of unspoken agreement not to disturb the calm, taking slower steps, breathing a little deeper, and letting their thoughts drift without urgency. It's in these moments that the mind seems to reorder itself naturally, drawing connections between memories, hopes, and half-formed ideas, creating a rare sense of clarity that lingers quietly throughout the rest of the day."""
+        self.paragraph_3 = """Sometimes I imagine what it would be like to spend a full day inside an old, quiet library--the kind with tall wooden shelves, a faint smell of paper and dust, and large windows that let in soft, filtered light even on cloudy afternoons. There's something soothing about the way sound behaves in spaces like that, as if footsteps and whispers are automatically lowered out of respect for the thousands of stories resting on the shelves. You can wander past rows of books without any particular plan and still feel a sense of purpose, because every spine you pass represents a small doorway into someone else's imagination or memory. Finding a seat at a heavy wooden table, you might open a random volume and discover a topic you've never thought about before, letting your curiosity lead you from one idea to the next. Hours can slip by almost unnoticed in such a place, leaving you with a pleasant sense of quiet accomplishment, even if all you did was read, think, and breathe in the calm."""
+        self.paragraph_4 = """Under the flicker of a dying streetlamp, I found myself staring at the kind of scene that makes a man question whether he's dreaming or just losing his grip on the edges of reality. The rain had turned the cracked pavement behind the Walmart into a slick sheet of shadow and reflection, and through the mist lumbered three pink elephants—yes, pink, like bubblegum dipped in moonlight—moving with the heavy confidence of creatures who knew nobody would dare cross them. Their tusks glinted like ivory switchblades as they guarded the entrance to a rusted loading bay, where muffled grunts and the dull thud of fists against flesh leaked out between the metal slats. Word on the street was that they ran the roughest underground fight club in the county, the kind of joint where a man could lose his wallet, his dignity, or his last good tooth in under ten minutes if he wasn't careful. As I watched them size me up with small, knowing eyes, I realized I had two choices: turn around and forget what I'd seen, or step inside and find out why even the bravest folks in town whispered about this place only after dark."""
+        random_paragraph = random.choice([self.paragraph_1, self.paragraph_2, self.paragraph_3, self.paragraph_4]) # chooses a random paragraph (using import random) from 1-4
         self.random_paragraph = random_paragraph
         #########################################################################
 
         tk.Label(self, text="Test your typing speed below", font=("Arial", 25)).pack(pady=20)
 
         # Paragraph Display and Entry Box #######################################
-        self.paragraph_display = tk.Text(self, height=12, width=70, wrap="word", font=("Arial", 11))
+        self.paragraph_display = tk.Text(self, height=12, width=70, wrap="word", font=("Arial", 15))
         self.paragraph_display.insert("1.0", self.random_paragraph)
         self.paragraph_display.config(state="disabled")
         self.paragraph_display.tag_config("correct", background="#7bf47b")
+        self.paragraph_display.tag_config("wrong", background="#fc4848")
         self.paragraph_display.pack(pady=10)
 
         self.text_box = tk.Text(self, height=10, width=60, wrap="word")
@@ -165,25 +163,48 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         
         self.paragraph_display.config(state="normal")
         self.paragraph_display.tag_remove("correct", "1.0", "end")
-        for i in range(min(len(typed_text), len(original_text))):
+        self.paragraph_display.tag_remove("wrong", "1.0", "end")
+
+        n = min(len(typed_text), len(original_text))
+
+        # Mark each typed character as correct or wrong in text display
+        for i in range(n):
+            start = f"1.0 + {i} chars"
+            end = f"1.0 + {i+1} chars"
             if typed_text[i] == original_text[i]:
-                start = f"1.0 + {i} chars"
-                end = f"1.0 + {i+1} chars"
                 self.paragraph_display.tag_add("correct", start, end)
             else:
-                break
+                self.paragraph_display.tag_add("wrong", start, end)
+
         self.paragraph_display.config(state="disabled")
-        
-        self.text_box.tag_remove("wrong", "1.0", "end") 
-        for i in range(len(typed_text)): # loops through each character in typed_text
-            if i >= len(original_text): 
+
+        # highlights typing box
+        self.text_box.tag_remove("wrong", "1.0", "end")
+
+        for i in range(len(typed_text)):
+            if i >= len(original_text):
                 break
-            if typed_text[i] != original_text[i]: # compares each character to original_text
-                start = f"1.0 + {i} chars" # calculates start position for tagging
-                end = f"1.0 + {i+1} chars" # ends tagging one character after start
-                self.text_box.tag_add("wrong", start, end) # adds "wrong" tag to incorrect characters
+            if typed_text[i] != original_text[i]:
+                start = f"1.0 + {i} chars"
+                end = f"1.0 + {i+1} chars"
+                self.text_box.tag_add("wrong", start, end)
     #########################################################################
-        
+
+    # Page Resetter #########################################################
+    def reset_page(self):
+        self.time_left_ms = 60000 #reset timer
+        self.timer_started = False
+        self.timer_label.config(text="60")
+        self.text_box.config(state="normal") #delete typed text
+        self.text_box.delete("1.0", "end")
+        new_paragraph = random.choice([self.paragraph_1, self.paragraph_2, self.paragraph_3, self.paragraph_4]) #new paragraph
+        self.random_paragraph = new_paragraph
+        self.paragraph_display.config(state="normal") #reset text
+        self.paragraph_display.delete("1.0", "end")
+        self.paragraph_display.insert("1.0", new_paragraph)
+        self.paragraph_display.config(state="disabled")
+    #########################################################################      
+
 class Result_page(tk.Frame): # Contains results, appears at end of timer
     def __init__(self, parent, controller):
         super().__init__(parent)
@@ -201,9 +222,9 @@ class Result_page(tk.Frame): # Contains results, appears at end of timer
         self.name_entry = tk.Entry(self)
         self.name_entry.pack(pady=5)
         tk.Button(self, text="Save",
-                  command=self.save_score).pack()
+                  command=lambda: (controller.show_frame(Leaderboard_page), self.save_score)).pack()
         tk.Button(self, text="See Leaderboard",
-                  command=lambda: controller.show_frame(Leaderboard_page)).pack(pady=10)
+                  command=lambda: controller.show_frame(Leaderboard_page)).pack(pady=15)
         #########################################################################
         
     # 'WPM Result Display' Updater and Save #################################
@@ -215,10 +236,14 @@ class Result_page(tk.Frame): # Contains results, appears at end of timer
     # Score Saves to Dictionary #############################################
     def save_score(self):
         name = self.name_entry.get().strip() or "Anonymous"
-        score_entry = {"name": name, "score": self.wpm}
-        self.controller.scores.append(score_entry)
+        existing = next((s for s in self.controller.scores 
+                     if s["name"].lower() == name.lower()), None)
+        if existing:
+            existing["score"] = max(existing["score"], self.wpm) # keep higher score
+        else:
+            self.controller.scores.append({"name": name, "score": self.wpm})
         save_scores(self.controller.scores)
-        self.name_entry.delete(0, "end") # clears entry box
+        self.name_entry.delete(0, "end")
     #########################################################################
 
 class Leaderboard_page(tk.Frame): # Contains saved scores
@@ -232,10 +257,17 @@ class Leaderboard_page(tk.Frame): # Contains saved scores
         self.list_label.pack(pady=10)
         #########################################################################
 
-        # 'Menu' Button ########################################
+        # 'Menu' and 'Try Again' Buttons ########################################
         tk.Button(self, text="Menu",
-                  command=lambda: controller.show_frame(Menu_page)).pack()
+            command=self.go_to_menu_and_reset).pack()
         #########################################################################
+
+    # Reset and Go to Menu ##################################################
+    def go_to_menu_and_reset(self):
+        self.controller.frames[Result_page].name_entry.delete(0, "end") #clear save results name entry
+        self.controller.frames[Typing_page].reset_page() #reset typing page
+        self.controller.show_frame(Menu_page) #go to menu
+    #########################################################################
 
     def tkraise(self):
         super().tkraise()
