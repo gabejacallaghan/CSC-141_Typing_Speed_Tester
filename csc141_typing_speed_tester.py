@@ -62,7 +62,7 @@ class Menu_page(tk.Frame): # Initial page
 
         # Logo Display ##########################################################
         img = Image.open("new_image.png")  # supports PNG transparency
-        img = img.resize((250, 250), Image.LANCZOS)  # resizes the image
+        img = img.resize((300, 300), Image.LANCZOS)  # resizes the image
         self.logo = ImageTk.PhotoImage(img)
 
         logo_label = tk.Label(self, image=self.logo, bg=self["bg"])  
@@ -70,9 +70,9 @@ class Menu_page(tk.Frame): # Initial page
         #########################################################################
 
         # 'Start' and 'Leaderboard' Buttons #####################################
-        tk.Button(self, text="Start",
+        tk.Button(self, text="Start", font=("Helvetica", 40),
                   command=lambda: controller.show_frame(Typing_page)).pack()
-        tk.Button(self, text="Leaderboard",
+        tk.Button(self, text="Leaderboard", font=("Helvetica", 15),
                   command=lambda: controller.show_frame(Leaderboard_page)).pack()
         #########################################################################
 
@@ -90,33 +90,30 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         self.random_paragraph = random_paragraph
         #########################################################################
 
-        tk.Label(self, text="Test your typing speed below", font=("Arial", 25)).pack(pady=20)
+        tk.Label(self, text="Test your typing speed below", font=("Helvetica", 20)).pack(pady=10)
 
         # Paragraph Display and Entry Box #######################################
-        self.paragraph_display = tk.Text(self, height=12, width=70, wrap="word", font=("Arial", 15))
+        self.paragraph_display = tk.Text(self, height=12, width=70, wrap="word", font=("Times New Roman", 20))
         self.paragraph_display.insert("1.0", self.random_paragraph)
         self.paragraph_display.config(state="disabled")
         self.paragraph_display.tag_config("correct", background="#7bf47b")
         self.paragraph_display.tag_config("wrong", background="#fc4848")
         self.paragraph_display.pack(pady=10)
 
-        self.text_box = tk.Text(self, height=10, width=60, wrap="word")
+        self.text_box = tk.Text(self, height=10, width=60, wrap="word", font=("Helvetica", 20))
         self.text_box.pack(pady=15)
         self.text_box.tag_config("wrong", background="#fc4848")
         self.text_box.bind("<KeyRelease>", self.check_text)
         #########################################################################
         
     # Timer and Related Functions ###############################################
-        self.timer_label = tk.Label(self, text="60", font=("Arial", 40))
+        self.timer_label = tk.Label(self, text="60", font=("Helvetica", 50))
         self.timer_label.pack(pady=20)
         self.time_left_ms = 60000
         self.timer_started = False
 
         self.text_box.bind("<KeyPress>", self.start_timer)
         self.text_box.bind("<KeyRelease>", self.check_text)
-
-        tk.Button(self, text="RESULTS (WILL BE TRIGGERED BY TIMER)", # DELETE EVENTUALLY
-                  command=lambda: controller.show_frame(Result_page)).pack()
 
     def start_timer(self, event=None):
         if not self.timer_started:
@@ -217,12 +214,12 @@ class Result_page(tk.Frame): # Contains results, appears at end of timer
         #########################################################################
 
         # Buttons to Save Score and Go To Leaderboard #############################
-        tk.Label(self, text="Enter your name to save your score").pack(pady=(20,5))
+        tk.Label(self, text="Enter your name to save your score", font=("helvetica", 30)).pack(pady=(20,5))
         self.name_entry = tk.Entry(self)
         self.name_entry.pack(pady=5)
-        tk.Button(self, text="Save",
+        tk.Button(self, text="Save", font=("Helvetica", 40),
                   command=lambda: (controller.show_frame(Leaderboard_page), self.save_score)).pack()
-        tk.Button(self, text="See Leaderboard",
+        tk.Button(self, text="See Leaderboard", font=("Helvetica", 20),
                   command=lambda: controller.show_frame(Leaderboard_page)).pack(pady=15)
         #########################################################################
         
