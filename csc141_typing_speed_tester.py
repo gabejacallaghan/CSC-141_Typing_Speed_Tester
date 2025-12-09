@@ -138,17 +138,15 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
 
     # WPM Calculator ########################################################
     def calculate_wpm(self):
-        typed = self.text_box.get("1.0", "end-1c").strip()
+        typed = self.text_box.get("1.0", "end-1c").strip() 
         target_words = self.random_paragraph.split()
         typed_words = typed.split()
         
-        correct = 0
+        wpm = 0
         
         for i in range(min(len(target_words), len(typed_words))):
             if typed_words[i] == target_words[i]:
-                correct += 1
-
-        wpm = correct
+                wpm += 1
        
         return wpm
     #########################################################################
