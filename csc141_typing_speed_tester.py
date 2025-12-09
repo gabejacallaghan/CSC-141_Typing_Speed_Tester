@@ -93,22 +93,22 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         tk.Label(self, text="Test your typing speed below", font=("Helvetica", 20)).pack(pady=10)
 
         # Paragraph Display and Entry Box #######################################
-        self.paragraph_display = tk.Text(self, height=12, width=70, wrap="word", font=("Times New Roman", 20))
+        self.paragraph_display = tk.Text(self, height=12, width=80, wrap="word", font=("Times New Roman", 18))
         self.paragraph_display.insert("1.0", self.random_paragraph)
         self.paragraph_display.config(state="disabled")
         self.paragraph_display.tag_config("correct", background="#7bf47b")
         self.paragraph_display.tag_config("wrong", background="#fc4848")
         self.paragraph_display.pack(pady=10)
 
-        self.text_box = tk.Text(self, height=10, width=60, wrap="word", font=("Helvetica", 20))
-        self.text_box.pack(pady=15)
+        self.text_box = tk.Text(self, height=10, width=70, wrap="word", font=("Helvetica", 18))
+        self.text_box.pack(pady=5)
         self.text_box.tag_config("wrong", background="#fc4848")
         self.text_box.bind("<KeyRelease>", self.check_text)
         #########################################################################
         
     # Timer and Related Functions ###############################################
-        self.timer_label = tk.Label(self, text="60", font=("Helvetica", 50))
-        self.timer_label.pack(pady=20)
+        self.timer_label = tk.Label(self, text="60", font=("Helvetica", 45))
+        self.timer_label.pack(pady=5)
         self.time_left_ms = 60000
         self.timer_started = False
 

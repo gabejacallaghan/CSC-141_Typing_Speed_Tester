@@ -62,7 +62,7 @@ class Menu_page(tk.Frame): # Initial page
 
         # Logo Display ##########################################################
         img = Image.open("new_image.png")  # supports PNG transparency
-        img = img.resize((250, 250), Image.LANCZOS)  # resizes the image
+        img = img.resize((300, 300), Image.LANCZOS)  # resizes the image
         self.logo = ImageTk.PhotoImage(img)
 
         logo_label = tk.Label(self, image=self.logo, bg=self["bg"])  
@@ -70,9 +70,9 @@ class Menu_page(tk.Frame): # Initial page
         #########################################################################
 
         # 'Start' and 'Leaderboard' Buttons #####################################
-        tk.Button(self, text="Start",
+        tk.Button(self, text="Start", font=("Helvetica", 40),
                   command=lambda: controller.show_frame(Typing_page)).pack()
-        tk.Button(self, text="Leaderboard",
+        tk.Button(self, text="Leaderboard", font=("Helvetica", 15),
                   command=lambda: controller.show_frame(Leaderboard_page)).pack()
         #########################################################################
 
@@ -90,33 +90,30 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         self.random_paragraph = random_paragraph
         #########################################################################
 
-        tk.Label(self, text="Test your typing speed below", font=("Arial", 25)).pack(pady=20)
+        tk.Label(self, text="Test your typing speed below", font=("Helvetica", 20)).pack(pady=10)
 
         # Paragraph Display and Entry Box #######################################
-        self.paragraph_display = tk.Text(self, height=12, width=70, wrap="word", font=("Arial", 15))
+        self.paragraph_display = tk.Text(self, height=12, width=80, wrap="word", font=("Times New Roman", 18))
         self.paragraph_display.insert("1.0", self.random_paragraph)
         self.paragraph_display.config(state="disabled")
         self.paragraph_display.tag_config("correct", background="#7bf47b")
         self.paragraph_display.tag_config("wrong", background="#fc4848")
-        self.paragraph_display.pack(pady=10)
+        self.paragraph_display.pack(pady=5)
 
-        self.text_box = tk.Text(self, height=10, width=60, wrap="word")
-        self.text_box.pack(pady=15)
+        self.text_box = tk.Text(self, height=10, width=60, wrap="word", font=("Helvetica", 20))
+        self.text_box.pack(pady=5)
         self.text_box.tag_config("wrong", background="#fc4848")
         self.text_box.bind("<KeyRelease>", self.check_text)
         #########################################################################
         
     # Timer and Related Functions ###############################################
-        self.timer_label = tk.Label(self, text="60", font=("Arial", 40))
-        self.timer_label.pack(pady=20)
+        self.timer_label = tk.Label(self, text="60", font=("Helvetica", 45))
+        self.timer_label.pack()
         self.time_left_ms = 60000
         self.timer_started = False
 
         self.text_box.bind("<KeyPress>", self.start_timer)
         self.text_box.bind("<KeyRelease>", self.check_text)
-
-        tk.Button(self, text="RESULTS (WILL BE TRIGGERED BY TIMER)", # DELETE EVENTUALLY
-                  command=lambda: controller.show_frame(Result_page)).pack()
 
     def start_timer(self, event=None):
         if not self.timer_started:
@@ -167,7 +164,7 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
 
         n = min(len(typed_text), len(original_text))
 
-        # Mark each typed character as correct or wrong in text display
+        # Marks each character correct or incorrect in display
         for i in range(n):
             start = f"1.0 + {i} chars"
             end = f"1.0 + {i+1} chars"
@@ -178,16 +175,15 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
 
         self.paragraph_display.config(state="disabled")
 
-        # highlights typing box
-        self.text_box.tag_remove("wrong", "1.0", "end")
-
-        for i in range(len(typed_text)):
-            if i >= len(original_text):
+        # Marks incorrect in typing box
+        self.text_box.tag_remove("wrong", "1.0", "end") 
+        for i in range(len(typed_text)): # loops through each character in typed_text
+            if i >= len(original_text): 
                 break
-            if typed_text[i] != original_text[i]:
-                start = f"1.0 + {i} chars"
-                end = f"1.0 + {i+1} chars"
-                self.text_box.tag_add("wrong", start, end)
+            if typed_text[i] != original_text[i]: # compares each character to original_text
+                start = f"1.0 + {i} chars" # calculates start position for tagging
+                end = f"1.0 + {i+1} chars" # ends tagging one character after start
+                self.text_box.tag_add("wrong", start, end) # adds "wrong" tag to incorrect characters
     #########################################################################
 
     # Page Resetter #########################################################
@@ -218,12 +214,12 @@ class Result_page(tk.Frame): # Contains results, appears at end of timer
         #########################################################################
 
         # Buttons to Save Score and Go To Leaderboard #############################
-        tk.Label(self, text="Enter your name to save your score").pack(pady=(20,5))
+        tk.Label(self, text="Enter your name to save your score", font=("helvetica", 30)).pack(pady=(20,5))
         self.name_entry = tk.Entry(self)
         self.name_entry.pack(pady=5)
-        tk.Button(self, text="Save",
+        tk.Button(self, text="Save", font=("Helvetica", 40),
                   command=lambda: (controller.show_frame(Leaderboard_page), self.save_score)).pack()
-        tk.Button(self, text="See Leaderboard",
+        tk.Button(self, text="See Leaderboard", font=("Helvetica", 20),
                   command=lambda: controller.show_frame(Leaderboard_page)).pack(pady=15)
         #########################################################################
         
