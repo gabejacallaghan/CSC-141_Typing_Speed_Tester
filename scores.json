@@ -1,10 +1,18 @@
 [
     {
+        "name": "Tessa",
+        "score": 98
+    },
+    {
         "name": "Gabe",
         "score": 75
     },
     {
         "name": "MT",
-        "score": 55
+        "score": 57
+    },
+    {
+        "name": "Test",
+        "score": 4
     }
 ]

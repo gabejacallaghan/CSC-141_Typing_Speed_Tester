@@ -218,7 +218,7 @@ class Result_page(tk.Frame): # Contains results, appears at end of timer
         self.name_entry = tk.Entry(self)
         self.name_entry.pack(pady=5)
         tk.Button(self, text="Save", font=("Helvetica", 40),
-                  command=lambda: (controller.show_frame(Leaderboard_page), self.save_score)).pack()
+                  command=lambda: (self.save_score(), controller.show_frame(Leaderboard_page))).pack()
         tk.Button(self, text="See Leaderboard", font=("Helvetica", 20),
                   command=lambda: controller.show_frame(Leaderboard_page)).pack(pady=15)
         #########################################################################
