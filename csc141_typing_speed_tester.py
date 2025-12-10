@@ -115,6 +115,9 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         self.text_box.bind("<KeyPress>", self.start_timer)
         self.text_box.bind("<KeyRelease>", self.check_text)
 
+        tk.Button(self, text="R", font=("Helvetica", 4),
+                  command=lambda: controller.show_frame(Result_page)).pack(pady=15)
+
     def start_timer(self, event=None):
         if not self.timer_started:
             self.timer_started = True
@@ -197,7 +200,7 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         self.paragraph_display.delete("1.0", "end")
         self.paragraph_display.insert("1.0", new_paragraph)
         self.paragraph_display.config(state="disabled")
-    #########################################################################      
+    #########################################################################
 
 class Result_page(tk.Frame): # Contains results, appears at end of timer
     def __init__(self, parent, controller):
@@ -217,7 +220,7 @@ class Result_page(tk.Frame): # Contains results, appears at end of timer
         self.name_entry.pack(pady=5)
         tk.Button(self, text="Save", font=("Helvetica", 40),
                   command=lambda: (self.save_score(), controller.show_frame(Leaderboard_page))).pack()
-        tk.Button(self, text="See Leaderboard", font=("Helvetica", 20),
+        tk.Button(self, text="See Leaderboard", font=("Helvetica", 14),
                   command=lambda: controller.show_frame(Leaderboard_page)).pack(pady=15)
         #########################################################################
         
@@ -246,14 +249,14 @@ class Leaderboard_page(tk.Frame): # Contains saved scores
         self.controller = controller
 
         # Leaderboard ###########################################################
-        leaderboard_label = tk.Label(self, text="Local Leaderboard", font=("Helvetica", 40)).pack(pady=20)
-        self.list_label = tk.Label(self, text="")
+        leaderboard_label = tk.Label(self, text="Local Leaderboard\n______________________________________", font=("Helvetica", 30)).pack(pady=20)
+        self.list_label = tk.Label(self, text="", font=("Helvetica", 30))
         self.list_label.pack(pady=10)
         #########################################################################
 
         # 'Menu' and 'Try Again' Buttons ########################################
-        tk.Button(self, text="Menu",
-            command=self.go_to_menu_and_reset).pack()
+        tk.Button(self, text="Menu", font=("helvetica", 30),
+            command=self.go_to_menu_and_reset).pack(pady=20)
         #########################################################################
 
     # Reset and Go to Menu ##################################################
