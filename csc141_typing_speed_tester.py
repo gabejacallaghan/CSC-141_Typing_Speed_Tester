@@ -94,15 +94,15 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
 
         # Paragraph Display and Entry Box #######################################
         self.paragraph_display = tk.Text(self, height=12, width=80, wrap="word", font=("Times New Roman", 18))
-        self.paragraph_display.insert("1.0", self.random_paragraph)
+        self.paragraph_display.insert("1.0", self.random_paragraph) #puts paragraph into display
         self.paragraph_display.config(state="disabled")
-        self.paragraph_display.tag_config("correct", background="#7bf47b")
-        self.paragraph_display.tag_config("wrong", background="#fc4848")
+        self.paragraph_display.tag_config("correct", background="#7bf47b") #configues the correct tag so that it displays green
+        self.paragraph_display.tag_config("wrong", background="#fc4848") #configures the wrong tag so that it displays red
         self.paragraph_display.pack(pady=10)
 
         self.text_box = tk.Text(self, height=10, width=70, wrap="word", font=("Helvetica", 18))
         self.text_box.pack(pady=5)
-        self.text_box.tag_config("wrong", background="#fc4848")
+        self.text_box.tag_config("wrong", background="#fc4848") #configures typed text tag so that it displays red if there's an error
         self.text_box.bind("<KeyRelease>", self.check_text)
         #########################################################################
         
