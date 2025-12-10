@@ -247,12 +247,12 @@ class Leaderboard_page(tk.Frame): # Contains saved scores
 
         # Leaderboard ###########################################################
         leaderboard_label = tk.Label(self, text="Local Leaderboard", font=("Helvetica", 40)).pack(pady=20)
-        self.list_label = tk.Label(self, text="", font=("Helvetica", 20))
+        self.list_label = tk.Label(self, text="")
         self.list_label.pack(pady=10)
         #########################################################################
 
         # 'Menu' and 'Try Again' Buttons ########################################
-        tk.Button(self, text="Menu", font=("Helvetica", 15),
+        tk.Button(self, text="Menu",
             command=self.go_to_menu_and_reset).pack()
         #########################################################################
 
