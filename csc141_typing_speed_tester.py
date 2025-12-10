@@ -85,7 +85,7 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         self.paragraph_1 = """Macaroni and cheese is one of those classic comfort foods that almost everyone enjoys. The warm cheese sauce blends perfectly with the tender pasta, creating a simple but incredibly satisfying dish. Some people prefer the boxed version for its nostalgic flavor, while others take pride in making it from scratch with real cheese and baked breadcrumbs on top. No matter how it's prepared, mac and cheese has a way of bringing people together, especially on cold days or during family gatherings. Its versatility also makes it fun to experiment with, whether by adding spices, vegetables, or even different types of cheese. Some restaurants have even turned it into a signature dish, offering versions with smoked gouda, bacon, or roasted jalapenos that elevate it from a simple side to a meal all its own. At the end of the day, though, even the most basic recipe has a comforting, familiar quality that can brighten someone's mood almost instantly."""
         self.paragraph_2 = """On quiet autumn mornings, there's a particular stillness that seems almost intentional, as if the world is pausing just long enough for anyone paying attention to notice the small details usually lost in the rush of everyday life. The light filters through thinning leaves at an angle that feels softer than summer sunlight, carrying a faint golden tint that settles gently on everything it touches. Even the sounds shift: birds call in slower, clearer rhythms, and distant traffic seems muffled, as though wrapped in a blanket of cool air. People walking through a park at this hour often move with a kind of unspoken agreement not to disturb the calm, taking slower steps, breathing a little deeper, and letting their thoughts drift without urgency. It's in these moments that the mind seems to reorder itself naturally, drawing connections between memories, hopes, and half-formed ideas, creating a rare sense of clarity that lingers quietly throughout the rest of the day."""
         self.paragraph_3 = """Sometimes I imagine what it would be like to spend a full day inside an old, quiet library--the kind with tall wooden shelves, a faint smell of paper and dust, and large windows that let in soft, filtered light even on cloudy afternoons. There's something soothing about the way sound behaves in spaces like that, as if footsteps and whispers are automatically lowered out of respect for the thousands of stories resting on the shelves. You can wander past rows of books without any particular plan and still feel a sense of purpose, because every spine you pass represents a small doorway into someone else's imagination or memory. Finding a seat at a heavy wooden table, you might open a random volume and discover a topic you've never thought about before, letting your curiosity lead you from one idea to the next. Hours can slip by almost unnoticed in such a place, leaving you with a pleasant sense of quiet accomplishment, even if all you did was read, think, and breathe in the calm."""
-        self.paragraph_4 = """Under the flicker of a dying streetlamp, I found myself staring at the kind of scene that makes a man question whether he's dreaming or just losing his grip on the edges of reality. The rain had turned the cracked pavement behind the Walmart into a slick sheet of shadow and reflection, and through the mist lumbered three pink elephants—yes, pink, like bubblegum dipped in moonlight—moving with the heavy confidence of creatures who knew nobody would dare cross them. Their tusks glinted like ivory switchblades as they guarded the entrance to a rusted loading bay, where muffled grunts and the dull thud of fists against flesh leaked out between the metal slats. Word on the street was that they ran the roughest underground fight club in the county, the kind of joint where a man could lose his wallet, his dignity, or his last good tooth in under ten minutes if he wasn't careful. As I watched them size me up with small, knowing eyes, I realized I had two choices: turn around and forget what I'd seen, or step inside and find out why even the bravest folks in town whispered about this place only after dark."""
+        self.paragraph_4 = """Under the flicker of a dying streetlamp, I found myself staring at the kind of scene that makes a man question whether he's dreaming or just losing his grip on the edges of reality. The rain had turned the cracked pavement behind the Walmart into a slick sheet of shadow and reflection, and through the mist lumbered three pink elephants--yes, pink, like bubblegum dipped in moonlight--moving with the heavy confidence of creatures who knew nobody would dare cross them. Their tusks glinted like ivory switchblades as they guarded the entrance to a rusted loading bay, where muffled grunts and the dull thud of fists against flesh leaked out between the metal slats. Word on the street was that they ran the roughest underground fight club in the county, the kind of joint where a man could lose his wallet, his dignity, or his last good tooth in under ten minutes if he wasn't careful. As I watched them size me up with small, knowing eyes, I realized I had two choices: turn around and forget what I'd seen, or step inside and find out why even the bravest folks in town whispered about this place only after dark."""
         random_paragraph = random.choice([self.paragraph_1, self.paragraph_2, self.paragraph_3, self.paragraph_4]) # chooses a random paragraph (using import random) from 1-4
         self.random_paragraph = random_paragraph
         #########################################################################
@@ -147,44 +147,46 @@ class Typing_page(tk.Frame): # Contains paragraph and entry box
         
         wpm = 0
         
-        for i in range(min(len(target_words), len(typed_words))):
-            if typed_words[i] == target_words[i]:
-                wpm += 1
+        for i in range(min(len(target_words), len(typed_words))): #for every word counted...
+            if typed_words[i] == target_words[i]: #if it is correct...
+                wpm += 1 #add it to the wpm
        
         return wpm
     #########################################################################
     
     # Text Checker ##########################################################
-    def check_text(self, event=None): # checks text to make sure it's correct
+    def check_text(self, event=None):
         typed_text = self.text_box.get("1.0", "end-1c")
         original_text = self.random_paragraph
-        
-        self.paragraph_display.config(state="normal")
+
+        self.paragraph_display.config(state="normal") #allows tagging in display paragraph
         self.paragraph_display.tag_remove("correct", "1.0", "end")
         self.paragraph_display.tag_remove("wrong", "1.0", "end")
 
         n = min(len(typed_text), len(original_text))
 
-        # Marks each character correct or incorrect in display
         for i in range(n):
             start = f"1.0 + {i} chars"
             end = f"1.0 + {i+1} chars"
-            if typed_text[i] == original_text[i]:
-                self.paragraph_display.tag_add("correct", start, end)
+            if typed_text[i] == original_text[i]: #if the typed text is the same...
+                self.paragraph_display.tag_add("correct", start, end) #tag it as correct
             else:
+                self.paragraph_display.tag_add("wrong", start, end) #if not, tag is as wrong
+
+        if len(typed_text) > len(original_text):
+            for i in range(len(original_text), len(typed_text)):
+                start = f"1.0 + {i} chars"
+                end = f"1.0 + {i+1} chars"
                 self.paragraph_display.tag_add("wrong", start, end)
 
         self.paragraph_display.config(state="disabled")
 
-        # Marks incorrect in typing box
-        self.text_box.tag_remove("wrong", "1.0", "end") 
-        for i in range(len(typed_text)): # loops through each character in typed_text
-            if i >= len(original_text): 
-                break
-            if typed_text[i] != original_text[i]: # compares each character to original_text
-                start = f"1.0 + {i} chars" # calculates start position for tagging
-                end = f"1.0 + {i+1} chars" # ends tagging one character after start
-                self.text_box.tag_add("wrong", start, end) # adds "wrong" tag to incorrect characters
+        self.text_box.tag_remove("wrong", "1.0", "end")
+        for i in range(min(len(typed_text), len(original_text))):
+            if typed_text[i] != original_text[i]:
+                start = f"1.0 + {i} chars"
+                end = f"1.0 + {i+1} chars"
+                self.text_box.tag_add("wrong", start, end)
     #########################################################################
 
     # Page Resetter #########################################################
