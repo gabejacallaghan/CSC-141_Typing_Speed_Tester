@@ -1,3 +1,5 @@
+#GOT HELP we got help with this whole thing from ChatGPT and other online sources. I hope that's OK--I don't really think we could have completed anything at this level without it. We did not just have it write the whole program, we just asked it for help with little sections, and then we did the work to stitch it all together.
+
 import time
 import tkinter as tk
 import random
